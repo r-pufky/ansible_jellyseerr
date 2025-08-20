@@ -19,7 +19,6 @@
     "syncEnabled": {{ server.sync_enabled | lower }},
     "preventSearch": {{ server.prevent_search | lower }},
     "tagRequests": {{ server.tag_requests | lower }},
-    "override_rule": [],  {# TODO(role): figure out when running #}
     "minimumAvailability": "{{ server.minimum_availability }}"
   }{{ ',' if not loop.last else '' }}
 {%   endfor %}

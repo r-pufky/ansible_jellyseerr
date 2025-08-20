@@ -39,6 +39,9 @@
 #     tags: list of int - Tag ID's.
 #         Default: [] (disabled).
 #     is_4k: bool - 4k support.
+#         Special Case:
+#           * Only set to true if there are multiple servers defined and at
+#             least one supports 4k.
 #         Default: False.
 #     is_default: bool - Default radarr server.
 #         Default: True.

@@ -48,6 +48,8 @@ jellyseerr_role_packages:
 ###############################################################################
 # Jellyseerr GitHub Options
 ###############################################################################
+# Only source code is released.
+#
 # Reference:
 # * https://github.com/fallenbagel/jellyseerr/tags
 
@@ -56,6 +58,7 @@ jellyseerr_role_repo_release_repo: 'jellyseerr'
 jellyseerr_role_repo_release_asset: '{VERSION}.tar.gz'
 jellyseerr_role_repo_extract_dir: '/opt/jellyseerr'
 jellyseerr_role_repo_extract_symlink: '/opt/jellyseerr/jellyseerr'
+jellyseerr_role_repo_release_download_source_enable: true
 
 ###############################################################################
 # NVM Options
@@ -119,5 +122,7 @@ jellyseerr_role_sqlite_user_insert: >
   INSERT OR REPLACE INTO \"user\" (id, email, permissions, avatar, password,
   userType) VALUES
 
+# Case specific columns require double quotes.
 jellyseerr_role_pg_user_insert: >
-  INSERT INTO user (id, email, permissions, avatar, password, userType) VALUES
+  INSERT INTO "user" (id, email, permissions, avatar, password, "userType")
+  VALUES

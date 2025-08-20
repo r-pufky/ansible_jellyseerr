@@ -99,6 +99,8 @@
     repo_release_repo: '{{ jellyseerr_role_repo_release_repo }}'
     repo_release_tag: '{{ _jellyseerr_srv_version.raw }}'
     repo_release_asset: '{{ jellyseerr_role_repo_release_asset }}'
+    repo_release_download_source_enable:
+      '{{ jellyseerr_role_repo_release_download_source_enable }}'
     repo_file_owner: '{{ _jellyseerr_srv_user.role_uid }}'
     repo_file_group: '{{ _jellyseerr_srv_group.role_gid }}'
     repo_extract_dir: '{{ jellyseerr_role_repo_extract_dir }}'

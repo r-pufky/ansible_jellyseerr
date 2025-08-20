@@ -896,18 +896,7 @@
       deprecated: false,
       order: 1,
     }
-    _jellyseerr_cfg_override: {
-      section: 'override',
-      key: '',
-      raw: '{{ jellyseerr_cfg_sonarr }}',
-      data: [],  # (list of dict) templated.
-      default: [],
-      hint: 'list of dict',
-      added: '0.0.0',
-      sensitive: false,
-      deprecated: false,
-      order: 1,
-    }
+    # Override configuration done in database.
     _jellyseerr_cfg_public_initialized: {
       section: 'public',
       key: 'initialized',
@@ -2084,7 +2073,6 @@
       - 'tautulli'
       - 'radarr'
       - 'sonarr'
-      - 'override'
       - 'public'
       - 'notifications'
       - 'jobs'

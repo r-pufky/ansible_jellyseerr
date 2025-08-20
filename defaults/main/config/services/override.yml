@@ -1,8 +1,0 @@
----
-# yamllint disable rule:line-length
-# TODO(role): Not implemented.
-#
-# https://github.com/fallenbagel/jellyseerr/blob/develop/server/entity/OverrideRule.ts
-#
-# this might be stored in the database.
-jellyseerr_cfg_override: []
