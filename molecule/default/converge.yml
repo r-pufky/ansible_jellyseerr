@@ -1,16 +1,8 @@
 ---
-- name: 'Default | converge'
+- name: 'Converge'
   hosts: 'all'
   gather_facts: true  # ansible_facts for memory sizing.
   tasks:
-    - name: 'Default | converge | apply r_pufky.srv.overseerr'
+    - name: 'Converge | apply r_pufky.srv.jellyseerr'
       ansible.builtin.include_role:
-        name: 'r_pufky.srv.overseerr'
-      vars:
-        overseerr_build_clear_yarn_cache: true
-
-    - name: 'Default | converge | apply r_pufky.srv.overseerr (no build)'
-      ansible.builtin.include_role:
-        name: 'r_pufky.srv.overseerr'
-      vars:
-        overseerr_service_force_config_only_enable: true
+        name: 'r_pufky.srv.jellyseerr'

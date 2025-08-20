@@ -5,10 +5,11 @@
 # Default configuration is deployed successfully.
 #
 # Tests:
-# * Overseerr built and running.
-# * User is created.
-# * second (build skip) run executes without error.
-# * build cache is cleared.
+# * Jellyseerr built and running.
+# * Sqlite DB created.
+# * Owner is created.
+# * settings.json implicitly verified when service runs.
+# * permissions propagated to all user data directories.
 
 dependency:
   name: 'galaxy'
@@ -28,29 +29,32 @@ provisioner:
         repo_testing_enable: true
         repo_testing_versions:
           - comment: 'default'
-            version: 'v1.33.2'
+            version: 'v2.7.3'
             asset: '{{
                 lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
-                "/molecule/cache/v1.33.2.tar.gz"
+                "/molecule/cache/v2.7.3.tar.gz"
               }}'
           - comment: 'no build'
-            version: 'v1.33.2'
+            version: 'v2.7.3'
             asset: '{{
                 lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
-                "/molecule/cache/v1.33.2.tar.gz"
+                "/molecule/cache/v2.7.3.tar.gz"
               }}'
-        overseerr_build_memory: 1500
-        overseerr_users:
-          - id: 1
-            comment: 'test admin account'
-            email: 'test@example.com'
-            username: 'test'
-            permissions: 2
-            settings:
-              watchlist_sync_movies: true
-              watchlist_sync_tv: true
+        jellyseerr_cfg_api_key:
+          'NzJhZGFiODMtYjg4OC01Nzc1LWJhZjItODFhOTc1NDVhYjk5'
+        jellyseerr_cfg_build_memory: 1500
+        jellyseerr_srv_owner_password: 'testtest1'
 platforms:
-  - name: 'overseerr-debian-12-default'
+  - name: 'jellyseerr-debian-12-default'
+    image: 'ghcr.io/hifis-net/debian-systemd:12'
+    systemd: 'always'
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    command: '/lib/systemd/systemd'
+    pre_build_image: true
+    published_ports:
+      - '5055/tcp'
+  - name: 'jellyseerr-debian-12-user_data'
     image: 'ghcr.io/hifis-net/debian-systemd:12'
     systemd: 'always'
     volumes:

@@ -1,0 +1,123 @@
+---
+###############################################################################
+# Jellyseerr Role Options
+###############################################################################
+# Updates:
+# * New MAJOR, MINOR releases should hard branch at version before starting
+#   (e.g. 10.0.x branch). Only use LTS releases.
+# * Keep a separate change log as changes are made, you will not remember all
+#   of them.
+# * Use bare-metal docs to validate package/process changes.
+# * Update role defaults (includes updating defaults, tasks):
+#   * Use defaults/ to remove any changed/deprecated variables.
+#   * Hidden variables may be discovered after running the service and shutting
+#     down and checking settings.json for differences.
+#   * Diff release documentation for new variable exposure.
+# * Update tests for any changes.
+# * Standard role validation testing (yamllint, ansible-lint, todo, noqa).
+# * Tag with MAJOR.MINOR version, with PATCH representing role change - e.g.
+#   Jellyseerr: 2.7.3 -> Role: 2.7.301  (01 role release).
+#
+# Reference:
+# * https://jellyseerr.dev/
+# * https://docs.jellyseerr.dev/
+# * https://github.com/fallenbagel/jellyseerr
+
+# Last time Jellyseerr options were validated against a default configuration.
+jellyseerr_role_validate_date: '2025-08-19'
+jellyseerr_role_validate_release: 'bookworm'
+jellyseerr_role_validate_version: 'v2.7.3'
+
+jellyseerr_role_poll_interval: 3
+jellyseerr_role_poll_timeout: 30
+jellyseerr_role_poll_msg: '{{
+    "(max " ~ jellyseerr_role_poll_timeout ~ "s)" ~
+    (30 - (jellyseerr_role_poll_timeout | lower | length)) * " "
+  }}'
+
+###############################################################################
+# APT Packages
+###############################################################################
+
+jellyseerr_role_packages:
+  - 'git'  # nvm/pnpm.
+  - 'curl'  # nvm/pnpm.
+  - 'sqlite3'  # sqlite3.
+  - 'python3-psycopg2'  # community.postgresql_query.
+
+###############################################################################
+# Jellyseerr GitHub Options
+###############################################################################
+# Reference:
+# * https://github.com/fallenbagel/jellyseerr/tags
+
+jellyseerr_role_repo_release_owner: 'fallenbagel'
+jellyseerr_role_repo_release_repo: 'jellyseerr'
+jellyseerr_role_repo_release_asset: '{VERSION}.tar.gz'
+jellyseerr_role_repo_extract_dir: '/opt/jellyseerr'
+jellyseerr_role_repo_extract_symlink: '/opt/jellyseerr/jellyseerr'
+
+###############################################################################
+# NVM Options
+###############################################################################
+
+jellyseerr_role_nvm_version: 'v0.40.3'
+jellyseerr_role_nvm_nodejs_version: '22'
+jellyseerr_role_nvm_pnpm_version: '9'
+jellyseerr_role_nvm_url: '{{
+    "https://raw.githubusercontent.com/nvm-sh/nvm/" ~
+    jellyseerr_role_nvm_version ~ "/install.sh"
+  }}'
+
+###############################################################################
+# Build Options
+###############################################################################
+
+jellyseerr_role_etc_dir: '/etc/jellyseerr'
+jellyseerr_role_service_cfg: '/etc/jellyseerr/jellyseerr.conf'
+jellyseerr_role_opt_dir: '/opt/jellyseerr/jellyseerr'
+jellyseerr_role_config_dir: '/opt/jellyseerr/jellyseerr/config'
+jellyseerr_role_settings_cfg: '/opt/jellyseerr/jellyseerr/config/settings.json'
+jellyseerr_role_sqlite_db: '/opt/jellyseerr/jellyseerr/config/db/db.sqlite3'
+
+###############################################################################
+# API Options
+###############################################################################
+#
+# Reference:
+# * http://localhost:5055/api-docs
+
+jellyseerr_role_api_base: 'http://localhost:5055/api/v1'
+
+###############################################################################
+# Default Jellyseerr User/Group
+###############################################################################
+
+jellyseerr_role_group:
+  name: 'jellyseerr'
+  gid: 5560
+
+jellyseerr_role_user:
+  name: 'jellyseerr'
+  group: 'jellyseerr'
+  uid: 5560
+  shell: '/bin/bash'
+  home: '/opt/jellyseerr'
+  create_home: true
+  password: '!'
+  password_lock: true
+  update_password: 'always'
+  expires: -1
+  system: true
+
+###############################################################################
+# Default Jellyseerr db queries
+###############################################################################
+# queries used to modify db for setup.
+
+jellyseerr_role_sqlite_user_insert: >
+  INSERT OR REPLACE INTO \"user\" (id, email, permissions, avatar, password,
+  userType) VALUES
+
+jellyseerr_role_pg_user_insert: >
+  INSERT INTO user (id, email, permissions, avatar, password, userType) VALUES

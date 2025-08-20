@@ -1,0 +1,26 @@
+ "jellyfin": {
+  "name": "{{ _jellyseerr_cfg_jellyfin_name.raw }}",
+  "ip": "{{ _jellyseerr_cfg_jellyfin_ip.raw }}",
+  "port": {{ _jellyseerr_cfg_jellyfin_port.raw }},
+  "useSsl": {{ _jellyseerr_cfg_jellyfin_use_ssl.raw | lower }},
+  "urlBase": "{{ _jellyseerr_cfg_jellyfin_url_base.raw }}",
+  "externalHostname": "{{ _jellyseerr_cfg_jellyfin_external_hostname.raw }}",
+  "jellyfinForgotPasswordUrl": "{{ _jellyseerr_cfg_jellyfin_jellyfin_forgot_password_url.raw }}",
+{% if _jellyseerr_cfg_jellyfin_libraries.data | length > 0 %}
+  "libraries": [
+{%   for library in _jellyseerr_cfg_jellyfin_libraries.data %}
+    {
+     "id": {{ library.id }},
+     "name": "{{ library.name }}",
+     "enabled": {{ library.enabled | lower }},
+     "type": "{{ library.type }}",
+     "lastScan": {{ library.last_scan }}
+    }{{ ',' if not loop.last else '' }}
+{%   endfor %}
+  ],
+{% else %}
+  "libraries": [],
+{% endif %}
+  "serverId": "{{ _jellyseerr_cfg_jellyfin_server_id.raw }}",
+  "apiKey": "{{ _jellyseerr_cfg_jellyfin_api_key.raw }}"
+ },

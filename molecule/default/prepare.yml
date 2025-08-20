@@ -1,23 +1,23 @@
 ---
-- name: 'Default | prepare'
+- name: 'Prepare'
   hosts: 127.0.0.1
   connection: local
   gather_facts: false
   tasks:
-    - name: 'Default | prepare | create cache'
+    - name: 'Prepare | create cache'
       ansible.builtin.include_role:
         name: 'r_pufky.lib.tests'
         tasks_from: 'create_cache.yml'
       vars:
-        test_name: 'Default | prepare | create cache'
+        test_name: 'Prepare | create cache'
 
-    - name: 'Default | prepare | check 1.33.2'
+    - name: 'Prepare | check 2.7.3'
       ansible.builtin.include_role:
         name: 'r_pufky.lib.tests'
         tasks_from: 'cache_url.yml'
       vars:
-        test_name: 'Default | prepare | cache 1.33.2'
-        test_dest: 'v1.33.2.tar.gz'
+        test_name: 'Prepare | cache 2.7.3'
+        test_dest: 'v2.7.3.tar.gz'
         test_url:
-          'https://github.com/sct/overseerr/archive/refs/tags/v1.33.2.tar.gz'
+          'https://github.com/fallenbagel/jellyseerr/archive/refs/tags/v2.7.3.tar.gz'
         test_mode: '0640'

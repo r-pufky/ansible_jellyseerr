@@ -1,36 +1,55 @@
 ---
-# yamllint disable rule:line-length
 ###############################################################################
-# Overseerr Service Configuration
+# Jellyseerr Service Configuration
 ###############################################################################
-# Overseerr media request platform.
+# Existing databases are migrated automatically when new versions are
+# installed. Migration between database platforms is not supported and must be
+# done manually.
 #
-# Requirements:
-# Memory   Disk
-# 2GB      ~3GB (~1GB after build; see overseerr_build_clear_yarn_cache)
+# Requires ~2GB Memory.
 #
-# Reference:
-# * https://overseerr.dev/
-# * https://docs.overseerr.dev/
-# * https://github.com/sct/overseerr
+# Install size: ~3.4GB
+#          Jellyseerr: ~3GB.
+#   nvm(pnpm, nodejs): ~300MB.
+#            Packages: ~48MB.
+#
+# Set repo_host_access_token if API is rate limited. See r_pufky.deb.repo.
 
-# Version.
+# Jellyseerr Release.
 #
-# Older versions (<1.33.2) are not supported. Set repo_host_access_token if
-# github API is rate limited. See r_pufky.deb.repo.
+# Versions (Schematic):
+#       MAJOR: Unsafe - requires major role changes; only default MAJOR version
+#              is supported. See other branches if they exist.
+#       MINOR: Safe - Development is very active and should stick to schematic
+#              releases, not named branch releases.
+#       PATCH: Safe - Usually requires no role updates.
+#   RECOMMEND: Only increment PATCH. Never use 'latest'.
 #
 # Values:
-#   {VERSION}: tagged release to use ('v1.33.2').
-#      latest: use latest stable release.
+#   {VERSION}: Tagged release to use ('v2.7.3').
+#      latest: Use latest stable release.
 #
-# Default: 'latest'.
-overseerr_service_version: 'latest'
+# Default: 'v2.7.3'.
+jellyseerr_srv_version: 'v2.7.3'
+
+# Bind Jellyseerr service to specified interface.
+#
+# Values:
+#          '': bind to all available interfaces (default).
+#        {IP}: bind to valid IPv4/6 address ('127.0.0.1', '::', etc).
+#   localhost: bind to localhost.
+#
+# Default: '' (all interfaces).
+jellyseerr_srv_bind_address: ''
+
+# HTTP port. Default: 5055.
+jellyseerr_srv_port: 5055
 
 # Remove old installs on upgrade success? Default: True.
-overseerr_service_delete_old_versions_enable: true
+jellyseerr_srv_delete_old_versions_enable: true
 
 # Service Umask. Default: '0002'.
-overseerr_service_u_mask: '0002'
+jellyseerr_srv_u_mask: '0002'
 
 # Force overwrite existing install?
 #
@@ -40,55 +59,76 @@ overseerr_service_u_mask: '0002'
 # directories (if any). Any user data in these directories are DESTROYED.
 #
 # Default: False.
-overseerr_service_force_overwrite: false
+jellyseerr_srv_force_overwrite: false
 
-# Automatically restart Overseerr daily?
-#
-# Restarting the Overseerr service will automatically apply any downloaded auto
-# updates.
-#
-# Default: True.
-overseerr_service_restart_daily_enable: true
+# Automatically restart Jellyseerr daily? Default: True.
+jellyseerr_srv_restart_daily_enable: true
 
 # Only apply configuration?
 #
-# Reduces role application time by ONLY applying configuration changes. Does
-# NOT affect overseerr_media_set_perms_file_enable.
+# Reduces role application time by ONLY applying configuration changes.
 #
 # This should ONLY be used after the role has been fully run once.
 #
 # Useful when adding a change without reconfiguring the whole system or
 # checking and installing a new version. Suggest applying with extra options:
 #
-#   ansible-playbook site.yml --tags Overseerr -e 'overseerr_service_force_config_only_enable=true'
+#   ansible-playbook site.yml
+#       --tags Jellyseerr
+#       -e 'jellyseerr_srv_force_config_only_enable=true
 #
 # Default: False.
-overseerr_service_force_config_only_enable: false
+jellyseerr_srv_force_config_only_enable: false
+
+# Enable polling for jellyseerr_srv_port?
+#
+# Jellyseerr will report service is active and running but may not be ready to
+# accept API requests for user modifications. Wait until the webserver is
+# responding before attempting API calls. Automatically proceeds after
+# forgejo_role_poll_timeout seconds.
+#
+# Default: True (poll).
+jellyseerr_srv_poll_enable: true
 
 ###############################################################################
-# Overseer User
+# Jellyseerr Service User
 ###############################################################################
 
-# User that Overseer will run under.
+# User that Jellyseerr will run under.
 #
-# Enable overseerr_create_user if this account is not externally managed.
+# Enable jellyseerr_srv_create_user if this account is not externally managed.
 #
-# Default: 'overseerr'.
-overseerr_user: 'overseerr'
+# Must use BASH for build environment. nvm packages cached in home directory.
+#
+# Default: 'jellyseerr'.
+jellyseerr_srv_user: 'jellyseerr'
 
-# Group that Overseer will run under.
+# Group that Jellyseerr will run under.
 #
-# Enable overseerr_create_user if this group is not externally managed.
+# Enable jellyseerr_srv_create_user if this group is not externally managed.
 #
-# Default: 'overseerr'.
-overseerr_group: 'overseerr'
+# Default: 'jellyseerr'.
+jellyseerr_srv_group: 'jellyseerr'
 
-# Create overseerr_user, overseerr_group if not detected?
+# Create jellyseerr_srv_user, jellyseerr_srv_group if not detected?
 #
 # Applied via r_pufky.deb.users, see vars/main.yml for default user attributes.
 #
 # Default: True.
-overseerr_create_user: true
+jellyseerr_srv_create_user: true
+
+# Enable user management of data/media files?
+#
+# Use jellyseerr_srv_user to execute data/media management commands. Role
+# applies media permissions using 'root' by default. For mounted data locations
+# (NFS with squashed mounts, mapped container mounts, etc) the local root user
+# will not have sufficient privileges to modify these files.
+#
+# Applies to:
+# * /opt/jellyseerr
+#
+# Default: False.
+jellyseerr_srv_user_data_manage_enable: false
 
 ###############################################################################
 # Build Options
@@ -100,22 +140,49 @@ overseerr_create_user: true
 # default this is auto detected but may be overridden if it is reported
 # incorrectly in container systems.
 #
-# Default: '' (autodetect).
-overseerr_build_memory: ''
+# Values:
+#    #: Memory ceiling for Builds.
+#   -1: Autodetect memory ceiling (default).
+#
+# Default: -1 (autodetect).
+jellyseerr_srv_build_memory: -1
 
-# Clean YARN cache after build?
+# Clean PNPM cache after build?
 #
-# YARN hashes and caches all dependencies every time a rebuild of the project
-# occurs regardless of actual version changes. This will lead to caches that
-# are quite literally 100's of GB's. There is NO expectation of this being
-# resolved soon, as the bug has been opened for YEARS.
-#
-# This will clear the YARN cache in overseerr_role_yarn_cache_location after
-# the installation to minimize disk usage. Currently this temporary cache is
-# ~2GB PER built version.
+# This will clear unused packages from the PNPM build cache after a successful
+# build; which may help to maintain reasonable disk space usage when upgrading
+# between versions.
 #
 # Default: True.
+jellyseerr_srv_build_clear_cache: true
+
+###############################################################################
+# Jellyseerr Owner
+###############################################################################
+# Jellyseerr owner provides initial login, configuration, and REST API use.
 #
-# Reference:
-# * https://github.com/yarnpkg/yarn/issues/6037
-overseerr_build_clear_yarn_cache: true
+# Additional owner options and users may be configured after service started.
+
+# Owner email. Default: 'jellyseerr@example.com'.
+jellyseerr_srv_owner_email: 'jellyseerr@example.com'
+
+# Owner username. Default: 'jellyseerr'.
+jellyseerr_srv_owner_username: 'jellyseerr'
+
+# Owner password. Default: '{RANDOM}' (randomly generated).
+jellyseerr_srv_owner_password: '{{
+    lookup("ansible.builtin.password",
+           "/dev/null",
+           chars=["ascii_lowercase", "ascii_uppercase", "digits"],
+           length=32)
+  }}'
+
+# Owner avatar.
+#
+# Avatar URL for profile picture. Use image link from Plex/Jellyseerr profile.
+#
+# Default: (empty silhouette).
+jellyseerr_srv_owner_avatar: '{{
+    "https://gravatar.com/avatar/" ~
+    "c77fdc27cab83732b8623d2ea873d330?default=mm&size=200"
+  }}'

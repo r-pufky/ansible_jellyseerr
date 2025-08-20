@@ -1,0 +1,118 @@
+---
+###############################################################################
+# Database
+###############################################################################
+# Existing databases are migrated automatically when new versions are
+# installed. Migration between database platforms is not supported and must be
+# done manually.
+#
+# Reference:
+# * https://docs.jellyseerr.dev/extending-jellyseerr/database-config
+
+# Database type.
+#
+# Values:
+#     sqlite: Sqlite3 (default).
+#   postgres: Postgres.
+#
+# Default: 'sqlite'.
+jellyseerr_cfg_db_type: 'sqlite'
+
+# Log database queries? Default: False.
+jellyseerr_cfg_db_log_queries: false
+
+###############################################################################
+# Postgres Settings
+###############################################################################
+# Requires: jellyseerr_cfg_db_type=postgres.
+#
+# Database user must have root permissions for database.
+
+# Database host.
+#
+# Mutually exclusive with jellyseerr_cfg_db_socket_path. If both are defined
+# TCP connections are used.
+#
+# Default: 'localhost'.
+jellyseerr_cfg_db_host: 'localhost'
+
+# Database port.
+#
+# Requires jellyseerr_cfg_db_host.
+#
+# Mutually exclusive with jellyseerr_cfg_db_socket_path.
+#
+# Default: 5432.
+jellyseerr_cfg_db_port: 5432
+
+# Database Unix socket path.
+#
+# Mutually exclusive with jellyseerr_cfg_db_host, jellyseerr_cfg_db_port. If
+# both are defined TCP connections are used.
+#
+# Default: '' (disabled).
+jellyseerr_cfg_db_socket_path: ''
+
+# Database user. Default: 'jellyseerr'.
+jellyseerr_cfg_db_user: 'jellyseerr'
+
+# Database password. Default: 'jellyseerr'.
+jellyseerr_cfg_db_pass: 'jellyseerr'
+
+# Database password. Default: 'jellyseerr'.
+jellyseerr_cfg_db_name: 'jellyseerr'
+
+# Enable SSL? Default: False.
+jellyseerr_db_use_ssl: false
+
+# Reject unverifiable/unauthorized certificates?
+#
+# Requires jellyseerr_db_use_ssl.
+#
+# Default: True.
+jellyseerr_db_ssl_reject_unauthorized: true
+
+# CA certificate to verify connection.
+#
+# Requires jellyseerr_db_use_ssl.
+#
+# Sourced from ansible controller; automatically placed in
+# /opt/jellyseerr/jellyseerr/config/ca.cert with correct permissions.
+#
+# Values:
+#   '': Do not set CA certificate (default).
+#
+# jellyseerr_db_ssl_ca_file: 'host_vars/jellyseerr.example.com/data/ca.cert'
+#
+# Default: ''.
+jellyseerr_db_ssl_ca_file: ''
+
+# Private key (PEM) file.
+#
+# Requires jellyseerr_db_use_ssl.
+#
+# Sourced from ansible controller; automatically placed in
+# /opt/jellyseerr/jellyseerr/config/key.pem with correct permissions.
+#
+# Values:
+#   '': Do not set private key file (default).
+#
+# jellyseerr_db_ssl_key_file: 'host_vars/jellyseerr.example.com/data/key.pem'
+#
+# Default: ''.
+jellyseerr_db_ssl_key_file: ''
+
+# Private key certificate chain (PEM) file.
+#
+# Requires jellyseerr_db_use_ssl.
+#
+# Sourced from ansible controller; automatically placed in
+# /opt/jellyseerr/jellyseerr/config/chain.pem with correct permissions.
+#
+# Values:
+#   '': Do not set private key file (default).
+#
+# jellyseerr_db_ssl_key_file: 'host_vars/jellyseerr.example.com/data/chain.pem'
+#
+# Default: ''.
+jellyseerr_db_ssl_cert_file: ''

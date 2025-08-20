@@ -1,118 +1,167 @@
 ---
 # yamllint disable rule:line-length
 ###############################################################################
-# Overseerr Install
+# Jellyseerr Install
 ###############################################################################
 # Install specified version from github release.
 #
-# Bookworm requires nodejs to be pinned to origin for successful installation.
-# Pin 600 per setup reference.
+# All JS package managers, JS, and NodeJS are absolute meat-hook abominations
+# of anything resembling sanity for automated processes.
+#
+# Install required NodeJS dependencies from source to service user home
+# directory, ensuring a idempotent, pure, NodeJS setup for building. Built in
+# packages and other methods for deploying package managers on top of package
+# managers on top of package managers in practice lead to extremely nuanced and
+# hard to debug issues in practice; when the typical developer response is now
+# to 'install from head', especially for cases like 'I just want these
+# dependencies installed, is it really that hard? This is a solved problem many
+# fucking times over, quit reinventing the fucking wheel.'.
+#
+# Rant over.
 #
 # Reference:
-# * https://github.com/nodesource/distributions/blob/master/scripts/deb/setup_18.x
-# * https://github.com/sct/overseerr/blob/develop/Dockerfile
-# * https://github.com/sct/overseerr/blob/develop/.dockerignore
+# * https://docs.jellyseerr.dev/getting-started/buildfromsource
 # yamllint enable rule:line-length
+
+- name: 'Install | create build directories'
+  ansible.builtin.file:
+    path: '{{ item }}'
+    owner: '{{ _jellyseerr_srv_user.role_uid }}'
+    group: '{{ _jellyseerr_srv_group.role_gid }}'
+    mode: '0755'
+    state: 'directory'
+  become: true
+  become_user: '{{
+      _jellyseerr_srv_user.raw
+      if _jellyseerr_srv_user_data_manage_enable.raw else
+      "root"
+    }}'
+  loop:
+    - '{{ _jellyseerr.nvm_dir }}'
+    - '{{ _jellyseerr.nvm_cache }}'
+
+- name: 'Install | set nvm environment'
+  ansible.builtin.template:
+    src: 'nvm.env.j2'
+    dest: '{{ _jellyseerr.nvm_env }}'
+    owner: '{{ _jellyseerr_srv_user.role_uid }}'
+    group: '{{ _jellyseerr_srv_group.role_gid }}'
+    mode: '0644'
 
 - name: 'Install | packages'
   ansible.builtin.include_role:
     name: 'r_pufky.deb.apt'
   vars:
     apt_packages:
-      - '{{ overseerr_role_packages }}'
-    apt_pins: '{{ overseerr_role_pins }}'
-    apt_sources: '{{ overseerr_role_apt_sources }}'
+      - '{{ jellyseerr_role_packages }}'
     apt_package_update_cache: true
 
-- name: 'Install | nodejs additional packages'
-  community.general.npm:
-    name: '{{ item }}'
-    global: true
-    state: 'present'
-  loop: '{{ overseerr_role_nodejs_packages }}'
+# Preload environment for pure nvm install.
+- name: 'Install | nvm {{ jellyseerr_role_nvm_version }}'
+  ansible.builtin.shell:
+    'set -o pipefail && curl -o- {{ jellyseerr_role_nvm_url }} | bash'
+  args:
+    executable: '/bin/bash'
+    creates: '{{ _jellyseerr.nvm_sh }}'
+    chdir: '{{ _jellyseerr.nvm_dir }}'
+  environment:
+    NVM_DIR: '{{ _jellyseerr.nvm_dir }}'
+  changed_when: false
+  become: true
+  become_user: '{{ _jellyseerr_srv_user.raw }}'
 
-- name: 'Install | yarn additional packages'
-  community.general.yarn:
-    name: '{{ item }}'
-    global: true
-    production: false  # installs dev dependencies.
-    state: 'present'
-  loop: '{{ overseerr_role_yarn_packages }}'
+- name: 'Install | nodejs {{ jellyseerr_role_nvm_nodejs_version }}'
+  ansible.builtin.shell: >
+    source {{ _jellyseerr.nvm_env }} &&
+    nvm install {{ jellyseerr_role_nvm_nodejs_version }}
+  args:
+    executable: '/bin/bash'
+    chdir: '{{ _jellyseerr.nvm_dir }}'
+  changed_when: false
+  become: true
+  become_user: '{{ _jellyseerr_srv_user.raw }}'
 
-- name: 'Install | Overseerr package {{ overseerr_service_version }}'
+- name: 'Install | pnpm'
+  ansible.builtin.shell:
+    source {{ _jellyseerr.nvm_env }} && corepack enable pnpm
+  args:
+    executable: '/bin/bash'
+    chdir: '{{ _jellyseerr.nvm_dir }}'
+  changed_when: false
+  become: true
+  become_user: '{{ _jellyseerr_srv_user.raw }}'
+
+- name: 'Install | Jellyseerr package {{ jellyseerr_srv_version }}'
   ansible.builtin.include_role:
     name: 'r_pufky.deb.repo'
   vars:
-    repo_release_owner: '{{ overseerr_role_repo_release_owner }}'
-    repo_release_repo: '{{ overseerr_role_repo_release_repo }}'
-    repo_release_tag: '{{ overseerr_service_version }}'
-    repo_release_asset: '{{ overseerr_role_repo_release_asset }}'
-    repo_file_owner: '{{ overseerr_user }}'
-    repo_file_group: '{{ overseerr_group }}'
-    repo_extract_dir: '{{ overseerr_role_repo_extract_dir }}'
-    repo_extract_symlink: '{{ overseerr_role_repo_extract_symlink }}'
+    repo_release_owner: '{{ jellyseerr_role_repo_release_owner }}'
+    repo_release_repo: '{{ jellyseerr_role_repo_release_repo }}'
+    repo_release_tag: '{{ _jellyseerr_srv_version.raw }}'
+    repo_release_asset: '{{ jellyseerr_role_repo_release_asset }}'
+    repo_file_owner: '{{ _jellyseerr_srv_user.role_uid }}'
+    repo_file_group: '{{ _jellyseerr_srv_group.role_gid }}'
+    repo_extract_dir: '{{ jellyseerr_role_repo_extract_dir }}'
+    repo_extract_symlink: '{{ jellyseerr_role_repo_extract_symlink }}'
     repo_extract_migrate_files:
       - 'config/db/db.sqlite3'
-      - 'config/db/db.sqlite3-shm'  # Overseerr never closes DB's correctly.
+      - 'config/db/db.sqlite3-shm'  # Jellyseerr never closes DB's correctly.
       - 'config/db/db.sqlite3-wal'
       - 'config/settings.json'
-      - 'overseerr.conf'
+      - 'config/cache'  # Local TMDB image caching.
     repo_extract_delete_old_versions:
-      '{{ overseerr_service_delete_old_versions_enable }}'
-    repo_force_overwrite: '{{ overseerr_service_force_overwrite }}'
-    repo_extract_mode: 'a-st,o-rwx'
+      '{{ _jellyseerr_srv_delete_old_versions_enable.raw }}'
+    repo_force_overwrite: '{{ _jellyseerr_srv_force_overwrite.raw }}'
+    repo_extract_mode: 'a-st'  # ,o-rwx'
     repo_extract_extra_opts: '--strip-components=1'
-    # .next, dist, node_modules, srv, server: leave for build/running.
-    # committag.json: handled in build.
     repo_extract_remove_files:
-      - 'CHANGELOG.md'
-      - 'CODE_OF_CONDUCT.md'
-      - 'CONTRIBUTING.md'
-      - 'README.md'
-      - '.vscode'
-      - '.all-contributorsrc'
-      - '.dockerignore'
-      - '.editorconfig'
-      - '.eslintrc.js'
-      - '.git'
-      - '.gitbook.yaml'
-      - '.gitconfig'
-      - '.github'
-      - '.gitignore'
-      - '.husky'
-      - '.prettierignore'
-      - 'config/db/.gitkeep'
-      - 'config/logs/.gitkeep'
-      - 'config/.gitkeep'
-      - 'Dockerfile'
-      - 'Dockerfile.local'
-      - 'docker-compose.yml'
-      - 'docs'
-      - 'LICENSE'
-      - 'public/os_logo_filled.png'
-      - 'public/preview.jpg'
-      - 'snap'
-      - 'stylelint.config.js'
-      - 'cypress'
-      - 'merged-prettier-plugin.js'
-      - '.gitattributes'
-      - '.prettierrc.js'
-      - '.stoplight.json'
+      - '.all-contributorsrc'  # GIT.
+      - '.dockerignore'  # Docker.
+      - '.editorconfig'  # IDE.
+      - '.eslintrc.js'  # IDE.
+      - '.git'  # GIT.
+      - '.gitattributes'  # GIT.
+      - '.gitbook.yaml'  # GIT.
+      - '.gitconfig'  # GIT.
+      - '.github'  # GIT.
+      - '.gitignore'  # GIT.
+      - '.husky'  # GIT.
+      - '.prettierignore'  # IDE.
+      - '.prettierrc.js'  # IDE.
+      - '.stoplight.json'  # IDE.
+      - '.vscode'  # IDE.
+      - 'CHANGELOG.md'  # Docs.
+      - 'CODE_OF_CONDUCT.md'  # Docs.
+      - 'CONTRIBUTING.md'  # Docs.
+      - 'Dockerfile'  # Docker.
+      - 'Dockerfile.local'  # Docker.
+      - 'LICENSE'  # Docs.
+      - 'README.md'  # Docs.
+      - 'charts'  # Kubernetes.
+      - 'compose.yml'  # Docker.
+      - 'config/db/.gitkeep'  # GIT.
+      - 'config/logs/.gitkeep'  # GIT.
+      - 'config/.gitkeep'  # GIT.
+      - 'cypress.config.ts'  # Testing credentials.
+      - 'docker-compose.postgres.yaml'  # Docker.
+      - 'docs'  # Help docs.
+      - 'gen-docs'  # Help doc generator.
+      - 'merged-prettier-plugin.js'  # IDE.
+      - 'snap'  # Snap build.
+      - 'stylelint.config.js'  # IDE.
+      - 'cypress'  # Testing.
 
-# Install overseerr dependencies skipping cypress install and husky linting.
-#
-# Reference:
-# * https://github.com/yarnpkg/yarn/issues/4890#issuecomment-358179301
-- name: 'Install | yarn overseerr dependencies'
-  ansible.builtin.command:
-    argv:
-      - 'yarn'
-      - 'install'
-      - '--frozen-lockfile'
-      - '--network-timeout'
-      - '1000000'
-    chdir: '{{ overseerr_role_run_dir }}'
+- name: 'Install | dependencies'
+  ansible.builtin.shell: >
+      source {{ _jellyseerr.nvm_env }} &&
+      {{ _jellyseerr.corepack }} &&
+      pnpm install --frozen-lockfile
+  args:
+    executable: '/bin/bash'
+    chdir: '{{ jellyseerr_role_repo_extract_symlink }}'
   environment:
     CYPRESS_INSTALL_BINARY: '0'
     HUSKY: '0'
   changed_when: false
+  become: true
+  become_user: '{{ _jellyseerr_srv_user.raw }}'

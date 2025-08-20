@@ -6,11 +6,11 @@
 #
 # Reference:
 # * https://github.com/r-pufky/ansible_ufw
-# * https://docs.overseerr.dev/getting-started/installation#linux
+# * https://docs.jellyseerr.dev/extending-jellyseerr/reverse-proxy
 
-overseerr_ports:
+jellyseerr_srv_ports:
   - proto: 'tcp'
     from_ip: 'any'
     to_port: 5055
     direction: 'in'
-    comment: 'Overseerr WebUI'
+    comment: 'Jellyseerr WebUI'
