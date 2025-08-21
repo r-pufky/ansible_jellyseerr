@@ -63,18 +63,18 @@ jellyseerr_cfg_db_pass: 'jellyseerr'
 jellyseerr_cfg_db_name: 'jellyseerr'
 
 # Enable SSL? Default: False.
-jellyseerr_db_use_ssl: false
+jellyseerr_cfg_db_use_ssl: false
 
 # Reject unverifiable/unauthorized certificates?
 #
-# Requires jellyseerr_db_use_ssl.
+# Requires jellyseerr_cfg_db_use_ssl.
 #
 # Default: True.
-jellyseerr_db_ssl_reject_unauthorized: true
+jellyseerr_cfg_db_ssl_reject_unauthorized: true
 
 # CA certificate to verify connection.
 #
-# Requires jellyseerr_db_use_ssl.
+# Requires jellyseerr_cfg_db_use_ssl.
 #
 # Sourced from ansible controller; automatically placed in
 # /opt/jellyseerr/jellyseerr/config/ca.cert with correct permissions.
@@ -82,14 +82,15 @@ jellyseerr_db_ssl_reject_unauthorized: true
 # Values:
 #   '': Do not set CA certificate (default).
 #
-# jellyseerr_db_ssl_ca_file: 'host_vars/jellyseerr.example.com/data/ca.cert'
+# jellyseerr_cfg_db_ssl_ca_file:
+#   'host_vars/jellyseerr.example.com/data/ca.cert'
 #
 # Default: ''.
-jellyseerr_db_ssl_ca_file: ''
+jellyseerr_cfg_db_ssl_ca_file: ''
 
 # Private key (PEM) file.
 #
-# Requires jellyseerr_db_use_ssl.
+# Requires jellyseerr_cfg_db_use_ssl.
 #
 # Sourced from ansible controller; automatically placed in
 # /opt/jellyseerr/jellyseerr/config/key.pem with correct permissions.
@@ -97,14 +98,15 @@ jellyseerr_db_ssl_ca_file: ''
 # Values:
 #   '': Do not set private key file (default).
 #
-# jellyseerr_db_ssl_key_file: 'host_vars/jellyseerr.example.com/data/key.pem'
+# jellyseerr_cfg_db_ssl_key_file:
+#   'host_vars/jellyseerr.example.com/data/key.pem'
 #
 # Default: ''.
-jellyseerr_db_ssl_key_file: ''
+jellyseerr_cfg_db_ssl_key_file: ''
 
 # Private key certificate chain (PEM) file.
 #
-# Requires jellyseerr_db_use_ssl.
+# Requires jellyseerr_cfg_db_use_ssl.
 #
 # Sourced from ansible controller; automatically placed in
 # /opt/jellyseerr/jellyseerr/config/chain.pem with correct permissions.
@@ -112,7 +114,8 @@ jellyseerr_db_ssl_key_file: ''
 # Values:
 #   '': Do not set private key file (default).
 #
-# jellyseerr_db_ssl_key_file: 'host_vars/jellyseerr.example.com/data/chain.pem'
+# jellyseerr_cfg_db_ssl_key_file:
+#   'host_vars/jellyseerr.example.com/data/chain.pem'
 #
 # Default: ''.
-jellyseerr_db_ssl_cert_file: ''
+jellyseerr_cfg_db_ssl_cert_file: ''

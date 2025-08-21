@@ -24,11 +24,11 @@ Reference:
 {{ _jellyseerr_cfg_db_user.role_env }}={{ _jellyseerr_cfg_db_user.raw }}
 {{ _jellyseerr_cfg_db_pass.role_env }}={{ _jellyseerr_cfg_db_pass.raw }}
 {{ _jellyseerr_cfg_db_name.role_env }}={{ _jellyseerr_cfg_db_name.raw }}
-{{ _jellyseerr_db_use_ssl.role_env }}={{ _jellyseerr_db_use_ssl.raw | lower }}
-{%  if _jellyseerr_db_use_ssl.raw %}
-{{ _jellyseerr_db_ssl_reject_unauthorized.role_env }}={{ _jellyseerr_db_ssl_reject_unauthorized.raw | lower }}
-{{ _jellyseerr_db_ssl_ca_file.role_env }}={{ _jellyseerr_db_ssl_ca_file.raw }}
-{{ _jellyseerr_db_ssl_key_file.role_env }}={{ _jellyseerr_db_ssl_key_file.raw }}
-{{ _jellyseerr_db_ssl_cert_file.role_env }}={{ _jellyseerr_db_ssl_cert_file.raw }}
+{{ _jellyseerr_cfg_db_use_ssl.role_env }}={{ _jellyseerr_cfg_db_use_ssl.raw | lower }}
+{%  if _jellyseerr_cfg_db_use_ssl.raw %}
+{{ _jellyseerr_cfg_db_ssl_reject_unauthorized.role_env }}={{ _jellyseerr_cfg_db_ssl_reject_unauthorized.raw | lower }}
+{{ _jellyseerr_cfg_db_ssl_ca_file.role_env }}={{ _jellyseerr_cfg_db_ssl_ca_file.raw }}
+{{ _jellyseerr_cfg_db_ssl_key_file.role_env }}={{ _jellyseerr_cfg_db_ssl_key_file.raw }}
+{{ _jellyseerr_cfg_db_ssl_cert_file.role_env }}={{ _jellyseerr_cfg_db_ssl_cert_file.raw }}
 {%   endif %}
 {% endif %}

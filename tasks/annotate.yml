@@ -1940,10 +1940,10 @@
       deprecated: false,
       order: 8,
     }
-    _jellyseerr_db_use_ssl: {
+    _jellyseerr_cfg_db_use_ssl: {
       section: '',
       key: '',
-      raw: '{{ jellyseerr_db_use_ssl }}',
+      raw: '{{ jellyseerr_cfg_db_use_ssl }}',
       default: false,
       role_env: 'DB_USE_SSL',
       hint: 'bool',
@@ -1952,10 +1952,10 @@
       deprecated: false,
       order: 9,
     }
-    _jellyseerr_db_ssl_reject_unauthorized: {
+    _jellyseerr_cfg_db_ssl_reject_unauthorized: {
       section: '',
       key: '',
-      raw: '{{ jellyseerr_db_ssl_reject_unauthorized }}',
+      raw: '{{ jellyseerr_cfg_db_ssl_reject_unauthorized }}',
       default: true,
       role_env: 'DB_SSL_REJECT_UNAUTHORIZED',
       hint: 'bool',
@@ -1964,10 +1964,10 @@
       deprecated: false,
       order: 10,
     }
-    _jellyseerr_db_ssl_ca_file: {
+    _jellyseerr_cfg_db_ssl_ca_file: {
       section: '',
       key: '',
-      raw: '{{ jellyseerr_db_ssl_ca_file }}',
+      raw: '{{ jellyseerr_cfg_db_ssl_ca_file }}',
       default: '',
       role_dest: '/opt/jellyseerr/jellyseerr/config/ca.cert',
       role_perms: '0644',
@@ -1978,10 +1978,10 @@
       deprecated: false,
       order: 12,
     }
-    _jellyseerr_db_ssl_key_file: {
+    _jellyseerr_cfg_db_ssl_key_file: {
       section: '',
       key: '',
-      raw: '{{ jellyseerr_db_ssl_key_file }}',
+      raw: '{{ jellyseerr_cfg_db_ssl_key_file }}',
       default: '',
       role_dest: '/opt/jellyseerr/jellyseerr/config/key.pem',
       role_perms: '0640',
@@ -1992,10 +1992,10 @@
       deprecated: false,
       order: 14,
     }
-    _jellyseerr_db_ssl_cert_file: {
+    _jellyseerr_cfg_db_ssl_cert_file: {
       section: '',
       key: '',
-      raw: '{{ jellyseerr_db_ssl_cert_file }}',
+      raw: '{{ jellyseerr_cfg_db_ssl_cert_file }}',
       default: '',
       role_dest: '/opt/jellyseerr/jellyseerr/config/chain.pem',
       role_perms: '0640',
