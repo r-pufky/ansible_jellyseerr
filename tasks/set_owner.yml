@@ -38,10 +38,10 @@
     msg: |
       ╭───────────────────────────────────────────────────────────────────╮
       │                                                                   │
-      │               Waiting until port becomes available                │
-      │                             {{ jellyseerr_role_poll_msg }} │
+      │               Waiting until port becomes available.               │
       │                                                                   │
-      ╰───────────────────────────────────────────────────────────────────╯
+      ├───────────────────────────────────────────────────────────────────╯
+      │ Max {{ jellyseerr_role_poll_timeout }} seconds.
 
 - name: 'Set owner | poll service'
   when: _jellyseerr_srv_poll_enable.raw
@@ -53,7 +53,7 @@
     msg: |
       ╭───────────────────────────────────────────────────────────────────╮
       │                                                                   │
-      │                             Timed out.                            │
+      │                            Timed out.                             │
       │                                                                   │
       ╰───────────────────────────────────────────────────────────────────╯
 
@@ -77,10 +77,10 @@
         msg: |
           ╭───────────────────────────────────────────────────────────────────╮
           │                                                                   │
-          │                Owner not authorized for API access                │
-          │                   Adding owner directly to DB.                    │
+          │               Owner not authorized for API access.                │
           │                                                                   │
-          ╰───────────────────────────────────────────────────────────────────╯
+          ├───────────────────────────────────────────────────────────────────╯
+          │ Adding owner directly to DB.
 
     - name: 'Set owner | hash password'
       ansible.builtin.shell: >
@@ -184,6 +184,6 @@
           ╭───────────────────────────────────────────────────────────────────╮
           │                                                                   │
           │                       Failed to add owner.                        │
-          │                    Set jellyseerr_cfg_owner_*.                    │
           │                                                                   │
-          ╰───────────────────────────────────────────────────────────────────╯
+          ├───────────────────────────────────────────────────────────────────╯
+          │ Set jellyseerr_cfg_owner_*.

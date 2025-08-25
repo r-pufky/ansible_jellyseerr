@@ -15,8 +15,7 @@
     msg: |
       ╭───────────────────────────────────────────────────────────────────╮
       │                                                                   │
-      │                   Building Jellyseerr from source.                │
-      │                    This will take a few minutes.                  │
+      │  Building Jellyseerr from source. This will take a few minutes.   │
       │                                                                   │
       ╰───────────────────────────────────────────────────────────────────╯
 

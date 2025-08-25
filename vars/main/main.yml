@@ -24,8 +24,8 @@
 # * https://github.com/fallenbagel/jellyseerr
 
 # Last time Jellyseerr options were validated against a default configuration.
-jellyseerr_role_validate_date: '2025-08-19'
-jellyseerr_role_validate_release: 'bookworm'
+jellyseerr_role_validate_date: '2025-08-24'
+jellyseerr_role_validate_release: 'trixie'
 jellyseerr_role_validate_version: 'v2.7.3'
 
 jellyseerr_role_poll_interval: 3

@@ -71,17 +71,6 @@
 # * https://forgejo.org/docs/latest/admin/installation-binary
 # * https://forgejo.org/docs/latest/admin/config-cheat-sheet
 
-# TODO(12.x): Remove variable renaming check on next major Jellyseerr release.
-- name: 'Annotate | check deprecated variable usage'
-  when: >
-    hostvars[inventory_hostname] | dict2items |
-    selectattr("key", "match", "overseerr_*") | length > 0
-  ansible.builtin.fail:
-    msg: |
-      ✘ Role variables have migrated. Read defaults and update.
-
-      overseerr_* -> jellyseerr_*
-
 - name: 'Annotate | sanitize & annotate service defaults'
   ansible.builtin.set_fact:
     _jellyseerr_srv_version: {

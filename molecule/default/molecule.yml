@@ -45,8 +45,8 @@ provisioner:
         jellyseerr_cfg_build_memory: 1500
         jellyseerr_srv_owner_password: 'testtest1'
 platforms:
-  - name: 'jellyseerr-debian-12-default'
-    image: 'ghcr.io/hifis-net/debian-systemd:12'
+  - name: 'jellyseerr-debian-13-default'
+    image: 'ghcr.io/hifis-net/debian-systemd:13'
     systemd: 'always'
     volumes:
       - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
@@ -54,8 +54,8 @@ platforms:
     pre_build_image: true
     published_ports:
       - '5055/tcp'
-  - name: 'jellyseerr-debian-12-user_data'
-    image: 'ghcr.io/hifis-net/debian-systemd:12'
+  - name: 'jellyseerr-debian-13-user_data'
+    image: 'ghcr.io/hifis-net/debian-systemd:13'
     systemd: 'always'
     volumes:
       - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
