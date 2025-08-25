@@ -120,6 +120,13 @@ Run all unit tests:
 molecule test --all
 ```
 
+### Releases
+Major release versions track Jellyseerr release versions. Branch label tracks
+Debian OS release.
+
+* **[13.x.x](https://github.com/r-pufky/ansible_jellyseerr)**: 13 Trixie.
+* **[12.x.x](https://github.com/r-pufky/ansible_jellyseerr/tree/12.x)**: 12 Bookworm.
+
 ### Issues
 Create a bug and provide as much information as possible.
 
