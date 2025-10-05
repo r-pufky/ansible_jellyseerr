@@ -28,23 +28,23 @@
   ansible.builtin.template:
     src: 'jellyseerr.conf.j2'
     dest: '{{ jellyseerr_role_service_cfg }}'
-    owner: '{{ _jellyseerr_srv_user.role_uid }}'
-    group: '{{ _jellyseerr_srv_group.role_gid }}'
+    owner: '{{ _jellyseerr_srv_user._uid }}'
+    group: '{{ _jellyseerr_srv_group._gid }}'
     mode: '0640'
 
 - name: 'Config | set Jellyseerr config'
   ansible.builtin.template:
     src: 'settings.json.j2'
     dest: '{{ jellyseerr_role_settings_cfg }}'
-    owner: '{{ _jellyseerr_srv_user.role_uid }}'
-    group: '{{ _jellyseerr_srv_group.role_gid }}'
+    owner: '{{ _jellyseerr_srv_user._uid }}'
+    group: '{{ _jellyseerr_srv_group._gid }}'
     mode: '0640'
 
 - name: 'Config | secure config directories'
   ansible.builtin.file:
     path: '{{ jellyseerr_role_config_dir }}'
-    owner: '{{ _jellyseerr_srv_user.role_uid }}'
-    group: '{{ _jellyseerr_srv_group.role_gid }}'
+    owner: '{{ _jellyseerr_srv_user._uid }}'
+    group: '{{ _jellyseerr_srv_group._gid }}'
     mode: 'o-rwx'
     recurse: true
     state: 'directory'
@@ -53,48 +53,48 @@
   when: _jellyseerr_cfg_db_ssl_ca_file.raw | length > 0
   ansible.builtin.copy:
     src: '{{ _jellyseerr_cfg_db_ssl_ca_file.raw }}'
-    dest: '{{ _jellyseerr_cfg_db_ssl_ca_file.role_dest }}'
-    owner: '{{ _jellyseerr_srv_user.role_uid }}'
-    group: '{{ _jellyseerr_srv_group.role_gid }}'
-    mode: '{{ _jellyseerr_cfg_db_ssl_ca_file.role_perms }}'
+    dest: '{{ _jellyseerr_cfg_db_ssl_ca_file._dest }}'
+    owner: '{{ _jellyseerr_srv_user._uid }}'
+    group: '{{ _jellyseerr_srv_group._gid }}'
+    mode: '{{ _jellyseerr_cfg_db_ssl_ca_file._perms }}'
     force: true
 
 - name: 'Config | reset CA file'
   when: _jellyseerr_cfg_db_ssl_ca_file.raw | length == 0
   ansible.builtin.file:
-    path: '{{ _jellyseerr_cfg_db_ssl_ca_file.role_dest }}'
+    path: '{{ _jellyseerr_cfg_db_ssl_ca_file._dest }}'
     state: 'absent'
 
 - name: 'Config | set private key file'
   when: _jellyseerr_cfg_db_ssl_key_file.raw | length > 0
   ansible.builtin.copy:
     src: '{{ _jellyseerr_cfg_db_ssl_key_file.raw }}'
-    dest: '{{ _jellyseerr_cfg_db_ssl_key_file.role_dest }}'
-    owner: '{{ _jellyseerr_srv_user.role_uid }}'
-    group: '{{ _jellyseerr_srv_group.role_gid }}'
-    mode: '{{ _jellyseerr_cfg_db_ssl_key_file.role_perms }}'
+    dest: '{{ _jellyseerr_cfg_db_ssl_key_file._dest }}'
+    owner: '{{ _jellyseerr_srv_user._uid }}'
+    group: '{{ _jellyseerr_srv_group._gid }}'
+    mode: '{{ _jellyseerr_cfg_db_ssl_key_file._perms }}'
     force: true
 
 - name: 'Config | reset private key file'
   when: _jellyseerr_cfg_db_ssl_key_file.raw | length == 0
   ansible.builtin.file:
-    path: '{{ _jellyseerr_cfg_db_ssl_key_file.role_dest }}'
+    path: '{{ _jellyseerr_cfg_db_ssl_key_file._dest }}'
     state: 'absent'
 
 - name: 'Config | set certificate chain file'
   when: _jellyseerr_cfg_db_ssl_cert_file.raw | length > 0
   ansible.builtin.copy:
     src: '{{ _jellyseerr_cfg_db_ssl_cert_file.raw }}'
-    dest: '{{ _jellyseerr_cfg_db_ssl_cert_file.role_dest }}'
-    owner: '{{ _jellyseerr_srv_user.role_uid }}'
-    group: '{{ _jellyseerr_srv_group.role_gid }}'
-    mode: '{{ _jellyseerr_cfg_db_ssl_cert_file.role_perms }}'
+    dest: '{{ _jellyseerr_cfg_db_ssl_cert_file._dest }}'
+    owner: '{{ _jellyseerr_srv_user._uid }}'
+    group: '{{ _jellyseerr_srv_group._gid }}'
+    mode: '{{ _jellyseerr_cfg_db_ssl_cert_file._perms }}'
     force: true
 
 - name: 'Config | reset certificate chain file'
   when: _jellyseerr_cfg_db_ssl_cert_file.raw | length == 0
   ansible.builtin.file:
-    path: '{{ _jellyseerr_cfg_db_ssl_cert_file.role_dest }}'
+    path: '{{ _jellyseerr_cfg_db_ssl_cert_file._dest }}'
     state: 'absent'
 
 - name: 'Config | resolve node location'

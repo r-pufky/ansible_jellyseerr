@@ -22,14 +22,14 @@
 - name: 'Build | compile {{ _jellyseerr_srv_version.raw }}'
   ansible.builtin.shell: >
     source {{ _jellyseerr.nvm_env }} &&
-    corepack use pnpm@latest-{{ jellyseerr_role_nvm_pnpm_version }} &&
+    corepack use pnpm@latest-{{ jellyseerr__nvm_pnpm_version }} &&
     pnpm build
   args:
     executable: '/bin/bash'
     chdir: '{{ jellyseerr_role_opt_dir }}'
   environment:
     NODE_OPTIONS: '{{
-        _jellyseerr_srv_build_memory.role_args ~
+        _jellyseerr_srv_build_memory._args ~
         _jellyseerr_srv_build_memory.data
       }}'
     GENERATE_SOURCEMAP: 'false'
@@ -41,7 +41,7 @@
   when: _jellyseerr_srv_build_clear_cache.raw
   ansible.builtin.shell: >
     source {{ _jellyseerr.nvm_env }} &&
-    corepack use pnpm@latest-{{ jellyseerr_role_nvm_pnpm_version }} &&
+    corepack use pnpm@latest-{{ jellyseerr__nvm_pnpm_version }} &&
     pnpm store prune
   args:
     executable: '/bin/bash'

@@ -31,23 +31,23 @@
   ansible.builtin.set_fact:
     _jellyseerr_srv_user: '{{
         _jellyseerr_srv_user |
-        combine({"role_uid": _jellyseerr_srv_user_query.uid,
-                 "role_home": _jellyseerr_srv_user_query.home})
+        combine({"_uid": _jellyseerr_srv_user_query.uid,
+                 "_home": _jellyseerr_srv_user_query.home})
       }}'
     _jellyseerr_srv_group: '{{
         _jellyseerr_srv_group |
-        combine({"role_gid": _jellyseerr_srv_user_query.group})
+        combine({"_gid": _jellyseerr_srv_user_query.group})
       }}'
 
 - name: 'Prep | generate config locations'
   ansible.builtin.set_fact:
     _jellyseerr: {
-      nvm_env: '{{ _jellyseerr_srv_user.role_home ~ "/nvm.env" }}',
-      nvm_dir: '{{ _jellyseerr_srv_user.role_home ~ "/.nvm" }}',
-      nvm_sh: '{{ _jellyseerr_srv_user.role_home ~ "/.nvm/nvm.sh" }}',
-      nvm_cache: '{{ _jellyseerr_srv_user.role_home ~ "/.cache/node" }}',
+      nvm_env: '{{ _jellyseerr_srv_user._home ~ "/nvm.env" }}',
+      nvm_dir: '{{ _jellyseerr_srv_user._home ~ "/.nvm" }}',
+      nvm_sh: '{{ _jellyseerr_srv_user._home ~ "/.nvm/nvm.sh" }}',
+      nvm_cache: '{{ _jellyseerr_srv_user._home ~ "/.cache/node" }}',
       corepack:
-        '{{ "corepack use pnpm@latest-" ~ jellyseerr_role_nvm_pnpm_version }}',
+        '{{ "corepack use pnpm@latest-" ~ jellyseerr__nvm_pnpm_version }}',
     }
 
 - name: 'Prep | stop services'

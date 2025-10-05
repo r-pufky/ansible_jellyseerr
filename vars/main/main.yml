@@ -64,12 +64,12 @@ jellyseerr_role_repo_release_download_source_enable: true
 # NVM Options
 ###############################################################################
 
-jellyseerr_role_nvm_version: 'v0.40.3'
-jellyseerr_role_nvm_nodejs_version: '22'
-jellyseerr_role_nvm_pnpm_version: '9'
-jellyseerr_role_nvm_url: '{{
+jellyseerr__nvm_version: 'v0.40.3'
+jellyseerr__nvm_nodejs_version: '22'
+jellyseerr__nvm_pnpm_version: '9'
+jellyseerr__nvm_url: '{{
     "https://raw.githubusercontent.com/nvm-sh/nvm/" ~
-    jellyseerr_role_nvm_version ~ "/install.sh"
+    jellyseerr__nvm_version ~ "/install.sh"
   }}'
 
 ###############################################################################

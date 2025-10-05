@@ -126,7 +126,7 @@
     - name: 'Set owner | add {{ _jellyseerr_srv_owner_email.raw }}'
       when: _jellyseerr_cfg_db_type.raw == 'postgres'
       community.postgresql.postgresql_query:
-        ca_cert: '{{ _jellyseerr_cfg_db_ssl_ca_file.role_dest }}'
+        ca_cert: '{{ _jellyseerr_cfg_db_ssl_ca_file._dest }}'
         login_db: '{{ _jellyseerr_cfg_db_name.raw }}'
         login_host: '{{
             _jellyseerr_cfg_db_host.raw
