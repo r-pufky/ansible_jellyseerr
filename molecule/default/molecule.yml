@@ -53,7 +53,7 @@ platforms:
     command: '/lib/systemd/systemd'
     pre_build_image: true
     published_ports:
-      - '5055/tcp'
+      - '5055:5055/tcp'
   - name: 'jellyseerr-debian-13-user_data'
     image: 'ghcr.io/hifis-net/debian-systemd:13'
     systemd: 'always'

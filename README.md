@@ -113,7 +113,7 @@ ansible-playbook site.yml --tags Jellyseerr -e 'jellyseerr_srv_force_config_only
 ```
 
 ## Development
-Configure [environment](https://github.com/r-pufky/ansible_collection_srv/blob/main/docs/dev/environment/README.md)
+Configure [environment](https://github.com/r-pufky/ansible_collection_docs/blob/main/ansible/environment.md)
 
 Run all unit tests:
 ``` bash
